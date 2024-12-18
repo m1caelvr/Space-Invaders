@@ -1,9 +1,10 @@
 import {
-    INITIAL_FRAMES,
+  INITIAL_FRAMES,
   PATH_ENGINE_IMAGE,
   PATH_ENGINE_SPRITES,
   PATH_SPACESHIP_IMAGE,
 } from "../utils/constants.js";
+import Projectile from "./Projectile.js";
 
 export default class Player {
   constructor(canvasWidth, canvasHeight) {
@@ -19,7 +20,7 @@ export default class Player {
     this.image = this.getImage(PATH_SPACESHIP_IMAGE);
     this.engineImage = this.getImage(PATH_ENGINE_IMAGE);
     this.engineSprites = this.getImage(PATH_ENGINE_SPRITES);
-    
+
     this.sx = 0;
     this.framesCounter = INITIAL_FRAMES;
   }
@@ -72,10 +73,31 @@ export default class Player {
 
   update() {
     if (this.framesCounter === 0) {
-        this.sx = this.sx === 96 ? 0 : this.sx + 48;
-        this.framesCounter = INITIAL_FRAMES;
+      this.sx = this.sx === 96 ? 0 : this.sx + 48;
+      this.framesCounter = INITIAL_FRAMES;
     }
 
     this.framesCounter--;
+  }
+
+  shoot(projectiles) {
+    const p = new Projectile(
+      {
+        x: this.position.x + this.width / 2 - 1,
+        y: this.position.y + 2,
+      },
+      -10
+    );
+
+    projectiles.push(p);
+  }
+
+  hit(projectile) {
+    return (
+      projectile.position.x >= this.position.x &&
+      projectile.position.x <= this.position.x + this.width &&
+      projectile.position.y >= this.position.y &&
+      projectile.position.y <= this.position.y + this.height
+    )
   }
 }

@@ -1,0 +1,31 @@
+ion-range {
+    --knob-size: 20px;
+}
+ion-range::part(tick) {
+    background: var(--gray200);
+}
+ion-range::part(bar) {
+    background: var(--gray200);
+}
+ion-range::part(tick-active) {
+    background: var(--purple100);
+}
+ion-range::part(bar-active) {
+    background: var(--purple100);
+}
+
+
+ion-toggle {
+    --track-background-checked: var(--purple100);
+
+    --handle-spacing: 4px;
+    --handle-width: 15px;
+    --handle-height: 20px;
+}
+
+ion-toggle::part(track) {
+    height: 25px;
+    width: 45px;
+}
+
+

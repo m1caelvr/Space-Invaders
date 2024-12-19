@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="stylesheet" href="src/style.css" />
+    <link rel="stylesheet" href="src/ionIconStyles.css" />
+
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -13,7 +16,31 @@
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
 
-    <link rel="stylesheet" href="src/style.css" />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+    />
+
+    <script>
+      window.Ionic = {
+        config: {
+          mode: "ios",
+        },
+      };
+    </script>
 
     <title>Space Invaders</title>
   </head>
@@ -23,7 +50,9 @@
         <span class="score">score: <span>0</span></span>
         <span class="level">level: <span>1</span></span>
         <span class="high">high: <span>0</span></span>
-        <ion-icon class="icon-settings" name="settings"></ion-icon>
+        <button class="button-settings">
+          <ion-icon class="icon-settings" name="settings"></ion-icon>
+        </button>
       </div>
     </section>
 
@@ -40,6 +69,87 @@
       <div>
         <h1>Game Over</h1>
         <button class="button-restart">Restart</button>
+      </div>
+    </section>
+
+    <section class="pause-screen screen">
+      <div class="wrapper">
+        <h1>Pause</h1>
+        <div class="controls">
+          <h2>Controles de jogo</h2>
+  
+          <div class="music-controls control">
+            <label>
+              <ion-icon name="musical-notes"></ion-icon>
+              <h3>Música</h3>
+            </label>
+            <div class="regulator">
+              <ion-toggle checked="true"></ion-toggle>
+            </div>
+          </div>
+  
+          <div class="sensitivity-controls control">
+            <label>
+              <ion-icon name="game-controller"></ion-icon>
+              <h3>Sensibilidade</h3>
+            </label>
+            <div class="regulator">
+              <ion-range
+                aria-label="Custom range"
+                min="1"
+                max="10"
+                value="2"
+                pin="true"
+                ticks="true"
+                snaps="true"
+              ></ion-range>
+            </div>
+          </div>
+  
+          <script>
+            const range = document.querySelector("ion-range");
+  
+            // range.addEventListener('ionChange', ({ detail }) => {
+            //   console.log('ionChange emitted value: ' + detail.value);
+            // });
+          </script>
+  
+          <h2>Controles</h2>
+          <div class="left-control control">
+            <label>
+              <ion-icon name="arrow-back"></ion-icon>
+              <h3>Left</h3>
+            </label>
+            <div class="regulator">A</div>
+          </div>
+  
+          <div class="right-control control">
+            <label>
+              <ion-icon name="arrow-forward"></ion-icon>
+              <h3>Right</h3>
+            </label>
+            <div class="regulator">D</div>
+          </div>
+  
+          <div class="shoot-control control">
+            <label>
+              <i class="icon ion-pinpoint"></i>
+              <h3>Shoot</h3>
+            </label>
+            <div class="regulator">Space</div>
+          </div>
+  
+          <div class="pause-control control">
+            <label>
+              <ion-icon name="pause"></ion-icon>
+              <h3>Pause</h3>
+            </label>
+            <div class="regulator">Space</div>
+          </div>
+        </div>
+        <button class="button-return">
+          Retornar <ion-icon name="play"></ion-icon>
+        </button>
       </div>
     </section>
 

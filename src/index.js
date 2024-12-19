@@ -9,6 +9,7 @@ const SoundEffect = new SoundEffects();
 
 const startScreen = document.querySelector(".start-screen");
 const gameOverScreen = document.querySelector(".game-over");
+const pauseScreen = document.querySelector(".pause-screen");
 const scoreUI = document.querySelector(".score-ui");
 
 const scoreElement = document.querySelector(".score > span");
@@ -17,8 +18,11 @@ const highElement = document.querySelector(".high > span");
 
 const buttonPlay = document.querySelector(".button-play");
 const buttonRestart = document.querySelector(".button-restart");
+const buttonSettings = document.querySelector(".button-settings");
+const buttonReturn = document.querySelector(".button-return");
 
 gameOverScreen.remove();
+pauseScreen.remove();
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -34,13 +38,13 @@ const gameData = {
   score: 0,
   level: 1,
   high: 0,
-}
+};
 
 const showGameData = () => {
   scoreElement.textContent = gameData.score;
   levelElement.textContent = gameData.level;
   highElement.textContent = gameData.high;
-}
+};
 
 const player = new Player(canvas.width, canvas.height);
 const grid = new Grid(5, 10);
@@ -80,7 +84,7 @@ const incrementScore = (value) => {
   if (gameData.score > gameData.high) {
     gameData.high = gameData.score;
   }
-}
+};
 
 const drawObstacles = () => {
   obstacles.forEach((obstacle) => obstacle.draw(ctx));
@@ -191,7 +195,7 @@ const checkShootObstacle = () => {
 const spawnGrid = () => {
   if (grid.invaders.length === 0) {
     SoundEffect.playNextLevelSound();
-    
+
     grid.rows = Math.round(Math.random() * 9 + 1);
     grid.cols = Math.round(Math.random() * 9 + 1);
     grid.restart();
@@ -235,7 +239,22 @@ const gameOver = () => {
   document.body.append(gameOverScreen);
 };
 
+const gamePause = () => {
+  if (currentState === GameState.PAUSED) {
+    pauseScreen.remove();
+    currentState = GameState.PLAYING;
+    gameLoop();
+  } else if (currentState === GameState.PLAYING) {
+    currentState = GameState.PAUSED;
+    document.body.append(pauseScreen);
+  }
+};
+
 const gameLoop = () => {
+  if (currentState === GameState.PAUSED) {
+    return;
+  }
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (currentState === GameState.PLAYING) {
@@ -339,7 +358,8 @@ buttonPlay.addEventListener("click", () => {
 
   setInterval(() => {
     const invader = grid.getRandomInvader();
-    if (invader) invader.shoot(invadersProjectiles);
+    if (invader && currentState === GameState.PLAYING)
+      invader.shoot(invadersProjectiles);
   }, 1000);
 });
 
@@ -357,5 +377,8 @@ buttonRestart.addEventListener("click", () => {
 
   gameOverScreen.remove();
 });
+
+buttonSettings.addEventListener("click", gamePause)
+buttonReturn.addEventListener("click", gamePause)
 
 gameLoop();

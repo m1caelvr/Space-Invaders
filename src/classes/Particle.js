@@ -28,6 +28,6 @@ export default class Particle {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    this.opacity = this.opacity - 0.008 <= 0 ? 0 : this.opacity - 0.01;
+    this.opacity = Math.max(0, this.opacity - 0.01);
   }
 }

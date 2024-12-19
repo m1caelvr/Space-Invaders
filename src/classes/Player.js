@@ -11,6 +11,7 @@ export default class Player {
     this.width = 48 * 2;
     this.height = 48 * 2;
     this.velocity = 8;
+    this.alive = true;
 
     this.position = {
       x: canvasWidth / 2 - this.width / 2,
@@ -94,10 +95,10 @@ export default class Player {
 
   hit(projectile) {
     return (
-      projectile.position.x >= this.position.x &&
-      projectile.position.x <= this.position.x + this.width &&
-      projectile.position.y >= this.position.y &&
-      projectile.position.y <= this.position.y + this.height
+      projectile.position.x >= this.position.x + 20 &&
+      projectile.position.x <= this.position.x + 20 + this.width - 38 &&
+      projectile.position.y >= this.position.y + 22 &&
+      projectile.position.y <= this.position.y + 22 + this.height - 34
     )
   }
 }

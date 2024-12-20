@@ -3,7 +3,7 @@ import Obstacle from "./classes/Obstacle.js";
 import Particle from "./classes/Particle.js";
 import Player from "./classes/Player.js";
 import SoundEffects from "./classes/SoundEffects.js";
-import { GameState } from "./utils/constants.js";
+import { checkMutedOn as muted, GameState } from "./utils/constants.js";
 
 const SoundEffect = new SoundEffects();
 
@@ -33,6 +33,7 @@ canvas.height = innerHeight;
 ctx.imageSmoothingEnabled = false;
 
 let currentState = GameState.START;
+let checkMutedOn = muted;
 
 const gameData = {
   score: 0,
@@ -146,7 +147,9 @@ const checkShootInvader = () => {
   grid.invaders.forEach((invader, invaderIndex) => {
     playerProjectiles.some((projectile) => {
       if (invader.hit(projectile)) {
-        SoundEffect.playHitSound();
+        if (checkMutedOn) {
+          SoundEffect.playHitSound();
+        }
 
         createExplosion(
           {
@@ -169,7 +172,7 @@ const checkShootInvader = () => {
 const checkShootPlayer = () => {
   invadersProjectiles.some((projectile, i) => {
     if (player.hit(projectile)) {
-      SoundEffect.playExplosionSound();
+      if (checkMutedOn) SoundEffect.playExplosionSound();
       invadersProjectiles.splice(i, 1);
       gameOver();
     }
@@ -194,7 +197,7 @@ const checkShootObstacle = () => {
 
 const spawnGrid = () => {
   if (grid.invaders.length === 0) {
-    SoundEffect.playNextLevelSound();
+    if (checkMutedOn) SoundEffect.playNextLevelSound();
 
     grid.rows = Math.round(Math.random() * 9 + 1);
     grid.cols = Math.round(Math.random() * 9 + 1);
@@ -239,6 +242,8 @@ const gameOver = () => {
   document.body.append(gameOverScreen);
 };
 
+let isMusicToggleListenerAdded = false;
+
 const gamePause = () => {
   if (currentState === GameState.PAUSED) {
     pauseScreen.remove();
@@ -247,6 +252,16 @@ const gamePause = () => {
   } else if (currentState === GameState.PLAYING) {
     currentState = GameState.PAUSED;
     document.body.append(pauseScreen);
+
+    const buttonToggleMusic = document.getElementById("button-toggle-music");
+
+    if (!isMusicToggleListenerAdded) {
+      buttonToggleMusic.addEventListener("click", () => {
+        checkMutedOn = !checkMutedOn;
+        console.log(`Music muted: ${checkMutedOn}`);
+      });
+      isMusicToggleListenerAdded = true;
+    }
   }
 };
 
@@ -283,7 +298,7 @@ const gameLoop = () => {
     );
 
     if (keys.shoot.pressed && keys.shoot.released) {
-      SoundEffect.playShootSound();
+      if (checkMutedOn) SoundEffect.playShootSound();
 
       player.shoot(playerProjectiles);
       keys.shoot.released = false;
@@ -378,7 +393,7 @@ buttonRestart.addEventListener("click", () => {
   gameOverScreen.remove();
 });
 
-buttonSettings.addEventListener("click", gamePause)
-buttonReturn.addEventListener("click", gamePause)
+buttonSettings.addEventListener("click", gamePause);
+buttonReturn.addEventListener("click", gamePause);
 
 gameLoop();

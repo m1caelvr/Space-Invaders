@@ -10,3 +10,5 @@ export const GameState = {
     GAME_OVER: "gameOver",
     PAUSED: "pause",
 }
+
+export let checkMutedOn = true;

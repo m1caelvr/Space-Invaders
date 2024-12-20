@@ -3,7 +3,7 @@ export default class Projectile {
         this.position = position;
         this.velocity = velocity;
         this.width = 2;
-        this.height = 50;
+        this.height = 30;
     }
 
     draw(ctx) {

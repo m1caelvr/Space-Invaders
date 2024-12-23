@@ -153,6 +153,20 @@ canvas {
     width: 100%;
 }
 
+.pause-screen .controls .control .change-key{
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    display: block;
+    margin: 20px 0 0 auto;
+    cursor: pointer;
+    transition: box-shadow .3s ease;
+
+    background-color: transparent;
+    border: 1px solid var(--gray200);
+    color: var(--gray200);
+}
+
 .pause-screen .controls .control .regulator{
     display: flex;
     justify-content: end;

@@ -115,38 +115,40 @@
           </script>
   
           <h2>Controles</h2>
-          <div class="left-control control">
-            <label>
-              <ion-icon name="arrow-back"></ion-icon>
-              <h3>Left</h3>
-            </label>
-            <div class="regulator">A</div>
+          <div id="controls">
+            <div id="left" class="control">
+              <label>
+                <ion-icon name="arrow-back"></ion-icon>
+                <h3>Left</h3>
+              </label>
+              <button class="change-key">A</button>
+            </div>
+          
+            <div id="right" class="control">
+              <label>
+                <ion-icon name="arrow-forward"></ion-icon>
+                <h3>Right</h3>
+              </label>
+              <button class="change-key">D</button>
+            </div>
+          
+            <div id="shoot" class="control">
+              <label>
+                <i class="icon ion-pinpoint"></i>
+                <h3>Shoot</h3>
+              </label>
+              <button class="change-key">Space</button>
+            </div>
+          
+            <div id="pause" class="control">
+              <label>
+                <ion-icon name="pause"></ion-icon>
+                <h3>Pause</h3>
+              </label>
+              <button class="change-key">Enter</button>
+            </div>
           </div>
-  
-          <div class="right-control control">
-            <label>
-              <ion-icon name="arrow-forward"></ion-icon>
-              <h3>Right</h3>
-            </label>
-            <div class="regulator">D</div>
-          </div>
-  
-          <div class="shoot-control control">
-            <label>
-              <i class="icon ion-pinpoint"></i>
-              <h3>Shoot</h3>
-            </label>
-            <div class="regulator">Space</div>
-          </div>
-  
-          <div class="pause-control control">
-            <label>
-              <ion-icon name="pause"></ion-icon>
-              <h3>Pause</h3>
-            </label>
-            <div class="regulator">Space</div>
-          </div>
-        </div>
+          
         <button class="button-return">
           Retornar <ion-icon name="play"></ion-icon>
         </button>

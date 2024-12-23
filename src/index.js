@@ -4,6 +4,7 @@ import Particle from "./classes/Particle.js";
 import Player from "./classes/Player.js";
 import SoundEffects from "./classes/SoundEffects.js";
 import { checkMutedOn as muted, GameState } from "./utils/constants.js";
+import { loadFromLocalStorage, saveToLocalStorage } from "./utils/storage.js";
 
 const SoundEffect = new SoundEffects();
 
@@ -41,12 +42,6 @@ const gameData = {
   high: 0,
 };
 
-const showGameData = () => {
-  scoreElement.textContent = gameData.score;
-  levelElement.textContent = gameData.level;
-  highElement.textContent = gameData.high;
-};
-
 const player = new Player(canvas.width, canvas.height);
 const grid = new Grid(5, 10);
 
@@ -73,10 +68,69 @@ initObstacle();
 const keys = {
   left: false,
   right: false,
+  pause: false,
   shoot: {
     pressed: false,
     released: true,
   },
+};
+
+
+let controls = {
+  left: "keya",
+  right: "keyd",
+  shoot: "space",
+  pause: "enter",
+};
+
+let controlsMap = {};
+
+const updateControlsUI = () => {
+  Object.keys(controls).forEach((action) => {
+    controlsMap[action].textContent = controls[action];
+  });
+};
+
+const changeKey = (action) => {
+  const button = controlsMap[action];
+  button.classList.add("active");
+  button.textContent = "Press any key...";
+
+  const keyListener = (event) => {
+    controls[action] = event.code.toLowerCase();
+    console.log(controls[action]);
+    
+    updateControlsUI();
+    button.classList.remove("active");
+    saveToLocalStorage("gameControls", controls);
+    document.removeEventListener("keydown", keyListener);
+  };
+
+  document.addEventListener("keydown", keyListener);
+};
+
+const loadControls = () => {
+  const savedControls = loadFromLocalStorage("gameControls");
+  if (savedControls) controls = savedControls;
+};
+
+loadControls();
+
+
+
+const saveGameData = () => {
+  saveToLocalStorage("gameData", gameData);
+};
+
+const loadGameData = () => {
+  const savedData = loadFromLocalStorage("gameData");
+  if (savedData) Object.assign(gameData, savedData);
+};
+
+const showGameData = () => {
+  scoreElement.textContent = gameData.score;
+  levelElement.textContent = gameData.level;
+  highElement.textContent = gameData.high;
 };
 
 const incrementScore = (value) => {
@@ -84,6 +138,7 @@ const incrementScore = (value) => {
 
   if (gameData.score > gameData.high) {
     gameData.high = gameData.score;
+    saveGameData();
   }
 };
 
@@ -147,9 +202,7 @@ const checkShootInvader = () => {
   grid.invaders.forEach((invader, invaderIndex) => {
     playerProjectiles.some((projectile) => {
       if (invader.hit(projectile)) {
-        if (checkMutedOn) {
-          SoundEffect.playHitSound();
-        }
+        if (checkMutedOn) SoundEffect.playHitSound();
 
         createExplosion(
           {
@@ -255,6 +308,19 @@ const gamePause = () => {
 
     const buttonToggleMusic = document.getElementById("button-toggle-music");
 
+    controlsMap = {
+      left: document.querySelector("#left .change-key"),
+      right: document.querySelector("#right .change-key"),
+      shoot: document.querySelector("#shoot .change-key"),
+      pause: document.querySelector("#pause .change-key"),
+    };
+
+    updateControlsUI();
+
+    Object.keys(controls).forEach((action) => {
+      controlsMap[action].addEventListener("click", () => changeKey(action));
+    });
+
     if (!isMusicToggleListenerAdded) {
       buttonToggleMusic.addEventListener("click", () => {
         checkMutedOn = !checkMutedOn;
@@ -314,6 +380,10 @@ const gameLoop = () => {
       ctx.rotate(0.15);
     }
 
+    if (keys.pause) {
+      gamePause();
+    }
+
     ctx.translate(
       -player.position.x - player.width / 2,
       -player.position.y - player.height / 2
@@ -344,23 +414,26 @@ player.draw(ctx);
 
 addEventListener("keydown", (event) => {
   const key = event.code.toLowerCase();
-  const key2 = event.key.toLowerCase();
 
-  if (key === "keya") keys.left = true;
+  if (key === controls.left) keys.left = true;
 
-  if (key === "keyd") keys.right = true;
+  if (key === controls.right) keys.right = true;
 
-  if (key === "enter" || key === "space") keys.shoot.pressed = true;
+  if (key === controls.pause) keys.pause = true;
+
+  if (key === controls.shoot) keys.shoot.pressed = true;
 });
 
 addEventListener("keyup", (event) => {
   const key = event.code.toLowerCase();
 
-  if (key === "keya") keys.left = false;
+  if (key === controls.left) keys.left = false;
 
-  if (key === "keyd") keys.right = false;
+  if (key === controls.right) keys.right = false;
 
-  if (key === "enter" || key === "space") {
+  if (key === controls.pause) keys.pause = false;
+
+  if (key === controls.shoot) {
     keys.shoot.pressed = false;
     keys.shoot.released = true;
   }
@@ -396,4 +469,5 @@ buttonRestart.addEventListener("click", () => {
 buttonSettings.addEventListener("click", gamePause);
 buttonReturn.addEventListener("click", gamePause);
 
+loadGameData();
 gameLoop();

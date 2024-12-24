@@ -3,9 +3,9 @@ import Projectile from "./Projectile.js";
 
 export default class Invader {
   constructor(position, velocity) {
-    this.position = position
-    this.width = 50 * .8;
-    this.height = 37 * .8;
+    this.position = position;
+    this.width = 50 * 0.8;
+    this.height = 37 * 0.8;
     this.screenWidth = innerWidth;
 
     const distance = this.screenWidth - this.width;
@@ -33,7 +33,7 @@ export default class Invader {
   }
 
   incrementVelocity() {
-    this.velocity += .1;
+    this.velocity += 0.1;
   }
 
   draw(ctx) {
@@ -43,11 +43,11 @@ export default class Invader {
       this.position.y,
       this.width,
       this.height
-    )
+    );
   }
 
   shoot(projectiles) {
-    const p = new Projectile (
+    const p = new Projectile(
       {
         x: this.position.x + this.width / 2 - 1,
         y: this.position.y + this.height,
@@ -64,6 +64,6 @@ export default class Invader {
       projectile.position.x <= this.position.x + this.width &&
       projectile.position.y >= this.position.y &&
       projectile.position.y <= this.position.y + this.height
-    )
+    );
   }
 }

@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Press Start 2P", sans-serif;
+    user-select: none;
 }
 
 :root {
@@ -14,7 +15,7 @@
     --purple100: #941cff;
     --red400: #f63838;
 
-    --ion-text-color: var(--gray200);    
+    --ion-text-color: var(--gray200);
 }
 
 body {
@@ -44,13 +45,13 @@ canvas {
 }
 
 .screen span {
-    font-size: .6rem;
+    font-size: 0.6rem;
     color: var(--gray300);
     margin-top: auto;
     margin-bottom: 15px;
 }
 
-.start-screen > div{
+.start-screen > div {
     margin-top: auto;
 }
 
@@ -64,7 +65,7 @@ canvas {
     margin: 20px auto 0;
     font-size: 1rem;
     cursor: pointer;
-    transition: box-shadow .3s ease;
+    transition: box-shadow 0.3s ease;
 }
 
 .button-play:hover,
@@ -129,7 +130,7 @@ canvas {
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--gray200);
-    transition: transform .2s ease;
+    transition: transform 0.2s ease;
 }
 
 .score-ui .button-settings .icon-settings:hover {
@@ -162,29 +163,29 @@ canvas {
     font-size: 1rem;
     margin-top: 20px;
 }
-.pause-screen .controls .control{
+.pause-screen .controls .control {
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr .7fr;
+    grid-template-columns: 1fr 0.7fr;
     gap: 10px;
     width: 100%;
 }
 
-.pause-screen .controls .control .change-key{
+.pause-screen .controls .control .change-key {
     border: none;
     padding: 12px 20px;
     border-radius: 5px;
     display: block;
     margin: 20px 0 0 auto;
     cursor: pointer;
-    transition: box-shadow .3s ease;
+    transition: box-shadow 0.3s ease;
 
     background-color: transparent;
     border: 1px solid var(--gray200);
     color: var(--gray200);
 }
 
-.pause-screen .controls .control .regulator{
+.pause-screen .controls .control .regulator {
     display: flex;
     justify-content: end;
 }
@@ -195,11 +196,65 @@ canvas {
     gap: 10px;
 }
 .pause-screen .controls .control label h3 {
-    font-size: .7rem;
+    font-size: 0.7rem;
     margin: 0;
 }
 .pause-screen .controls .control label {
     font-size: 25px;
+}
+
+.joystick-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+#joystick-container {
+    position: relative;
+    width: 150px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    touch-action: none;
+    overflow: hidden;
+}
+
+#joystick {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: none;
+}
+
+#shoot-button {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    background: transparent;
+    border: 1px solid var(--gray200);
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    touch-action: none;
+    margin-inline: auto 0;
+}
+
+@media screen and (min-width: 600px) {
+    .joystick-wrapper {
+        display: none;
+    }
 }
 
 @keyframes backdrop {
@@ -215,7 +270,7 @@ canvas {
 @keyframes zoom {
     from {
         filter: opacity(0);
-        transform: scale(.5);
+        transform: scale(0.5);
     }
     to {
         filter: opacity(1);

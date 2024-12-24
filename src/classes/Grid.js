@@ -7,7 +7,7 @@ export default class Grid {
 
     this.direction = "right";
     this.moveDown = true;
-    this.invadersVelocity = 1;
+    this.invadersVelocity = 300;
     this.invaders = this.init();
   }
 

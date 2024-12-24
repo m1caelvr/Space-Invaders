@@ -23,6 +23,14 @@ const buttonRestart = document.querySelector(".button-restart");
 const buttonSettings = document.querySelector(".button-settings");
 const buttonReturn = document.querySelector(".button-return");
 
+const joystickContainer = document.getElementById("joystick-container");
+const joystick = document.getElementById("joystick");
+const shootButton = document.getElementById("shoot-button");
+
+let joystickActive = false;
+let joystickStartX = 0;
+let playerDirectionX = 0;
+
 gameOverScreen.remove();
 pauseScreen.remove();
 
@@ -32,7 +40,7 @@ const ctx = canvas.getContext("2d");
 const defineSizeCanvas = () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
-}
+};
 
 defineSizeCanvas();
 window.addEventListener("resize", defineSizeCanvas);
@@ -65,7 +73,7 @@ const initObstacle = () => {
 
   const obstacle1 = new Obstacle({ x: x - offset, y }, 100, 20, color);
   const obstacle2 = new Obstacle({ x: x + offset, y }, 100, 20, color);
-  
+
   obstacles = [];
 
   obstacles.push(obstacle1);
@@ -83,7 +91,6 @@ const keys = {
     released: true,
   },
 };
-
 
 let controls = {
   left: "keya",
@@ -108,7 +115,7 @@ const changeKey = (action) => {
   const keyListener = (event) => {
     controls[action] = event.code.toLowerCase();
     console.log(controls[action]);
-    
+
     updateControlsUI();
     button.classList.remove("active");
     saveToLocalStorage("gameControls", controls);
@@ -367,7 +374,7 @@ const gameLoop = () => {
     checkShootObstacle();
 
     grid.draw(ctx);
-    grid.update(player.alive);
+    // grid.update(player.alive);
 
     ctx.save();
 
@@ -383,12 +390,18 @@ const gameLoop = () => {
       keys.shoot.released = false;
     }
 
-    if (keys.left && player.position.x >= 0) {
+    if (
+      (keys.left && player.position.x >= 0) ||
+      (playerDirectionX < 0 && player.position.x >= 0)
+    ) {
       player.moveLeft();
       ctx.rotate(-0.15);
     }
 
-    if (keys.right && player.position.x <= canvas.width - player.width) {
+    if (
+      (keys.right && player.position.x <= canvas.width - player.width) ||
+      (playerDirectionX > 0 && player.position.x <= canvas.width - player.width)
+    ) {
       player.moveRight();
       ctx.rotate(0.15);
     }
@@ -476,6 +489,41 @@ buttonRestart.addEventListener("click", () => {
   gameData.level = 0;
 
   gameOverScreen.remove();
+});
+
+joystickContainer.addEventListener("touchstart", (e) => {
+  joystickActive = true;
+  const touch = e.touches[0];
+  joystickStartX = touch.clientX;
+});
+
+joystickContainer.addEventListener("touchmove", (e) => {
+  if (!joystickActive) return;
+
+  const touch = e.touches[0];
+  const containerRect = joystickContainer.getBoundingClientRect();
+
+  let deltaX = touch.clientX - joystickStartX;
+
+  const maxDelta = containerRect.width / 2 - joystick.offsetWidth / 2;
+  deltaX = Math.max(-maxDelta, Math.min(deltaX, maxDelta));
+
+  joystick.style.transform = `translate(calc(${deltaX}px - 50%), -50%)`;
+
+  playerDirectionX = deltaX / maxDelta;
+});
+
+joystickContainer.addEventListener("touchend", () => {
+  joystickActive = false;
+  joystick.style.transform = "translate(-50%, -50%)";
+  playerDirectionX = 0;
+});
+
+shootButton.addEventListener("touchstart", () => {
+  if (checkMutedOn) SoundEffect.playShootSound();
+
+  player.shoot(playerProjectiles);
+  keys.shoot.released = false;
 });
 
 buttonSettings.addEventListener("click", gamePause);

@@ -71,7 +71,7 @@ let globalDeviceType = globalDevice;
 globalDeviceType = deviceType;
 
 const player = new Player(innerWidth, innerHeight);
-const grid = new Grid(5, 10);
+const grid = new Grid(4, 7);
 
 const playerProjectiles = [];
 const invadersProjectiles = [];
@@ -295,8 +295,8 @@ const spawnGrid = () => {
   if (grid.invaders.length === 0) {
     if (checkMutedOn) SoundEffect.playNextLevelSound();
 
-    grid.rows = Math.round(Math.random() * 9 + 1);
-    grid.cols = Math.round(Math.random() * 9 + 1);
+    grid.rows = Math.round(Math.random() * 7 + 1);
+    grid.cols = Math.round(Math.random() * 7 + 1);
     grid.restart();
 
     gameData.level += 1;

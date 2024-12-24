@@ -195,7 +195,6 @@ const clearParticle = () => {
 
 const createExplosion = (position, size, color) => {
   for (let i = 0; i < size; i += 1) {
-    // const velocity =
     const particle = new Particle(
       {
         x: position.x,
@@ -374,7 +373,7 @@ const gameLoop = () => {
     checkShootObstacle();
 
     grid.draw(ctx);
-    // grid.update(player.alive);
+    grid.update(player.alive);
 
     ctx.save();
 

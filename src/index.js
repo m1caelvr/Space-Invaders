@@ -4,7 +4,7 @@ import Obstacle from "./classes/Obstacle.js";
 import Particle from "./classes/Particle.js";
 import Player from "./classes/Player.js";
 import SoundEffects from "./classes/SoundEffects.js";
-import { checkMutedOn as muted, GameState, globalDeviceType as globalDevice } from "./utils/constants.js";
+import { checkMutedOn as muted, GameState, globalDeviceType as globalDevice, invadersVelocity } from "./utils/constants.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./utils/storage.js";
 
 const SoundEffect = new SoundEffects();
@@ -94,7 +94,9 @@ const initObstacle = () => {
   obstacles = [];
 
   if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
-    obstacles.push(obstacle3);
+    // obstacles.push(obstacle3);
+    // console.log(obstacle3);
+    
   } else {
     obstacles.push(obstacle1);
     obstacles.push(obstacle2);
@@ -501,7 +503,7 @@ buttonRestart.addEventListener("click", () => {
   player.alive = true;
 
   grid.invaders.length = 0;
-  grid.invadersVelocity = 1;
+  grid.invadersVelocity = invadersVelocity;
 
   invadersProjectiles.length = 0;
 

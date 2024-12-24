@@ -1,4 +1,4 @@
-import { globalDeviceType } from "../utils/constants.js";
+import { globalDeviceType, invadersVelocity } from "../utils/constants.js";
 import Invader from "./Invaders.js";
 
 export default class Grid {
@@ -8,7 +8,7 @@ export default class Grid {
 
     this.direction = "right";
     this.moveDown = true;
-    this.invadersVelocity = 300;
+    this.invadersVelocity = invadersVelocity;
     this.invaders = this.init();
   }
 

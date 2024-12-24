@@ -1,4 +1,4 @@
-import { PATH_INVADER_IMAGE } from "../utils/constants.js";
+import { globalDeviceType, PATH_INVADER_IMAGE } from "../utils/constants.js";
 import Projectile from "./Projectile.js";
 
 export default class Invader {
@@ -6,10 +6,7 @@ export default class Invader {
     this.position = position;
     this.width = 50 * 0.8;
     this.height = 37 * 0.8;
-    this.screenWidth = innerWidth;
-
-    const distance = this.screenWidth - this.width;
-    this.velocity = distance / velocity;
+    this.velocity = velocity;
 
     this.image = this.getImage(PATH_INVADER_IMAGE);
   }
@@ -33,7 +30,8 @@ export default class Invader {
   }
 
   incrementVelocity() {
-    this.velocity += 0.1;
+    let deviceType = globalDeviceType;        
+    if (deviceType === "desktop") this.velocity += 0.1;
   }
 
   draw(ctx) {

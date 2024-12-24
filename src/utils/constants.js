@@ -13,5 +13,7 @@ export const GameState = {
     PAUSED: "pause",
 }
 
+export let invadersVelocity = 4;
+
 export let checkMutedOn = true;
 export let globalDeviceType = new DeviceControlManager().detectDevice();

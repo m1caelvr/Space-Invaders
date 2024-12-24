@@ -206,10 +206,11 @@ canvas {
 }
 
 .joystick-wrapper {
+    --size: 70px;
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 50px;
+    height: var(--size);
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -220,8 +221,8 @@ canvas {
 
 #joystick-container {
     position: relative;
-    width: 150px;
-    height: 60px;
+    width: calc(var(--size) * 3);
+    height: calc(var(--size) * 1.2);
     background: rgba(255, 255, 255, 0.2);
     border-radius: 999px;
     touch-action: none;
@@ -230,8 +231,8 @@ canvas {
 
 #joystick {
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: var(--size);
+    height: var(--size);
     background: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
     top: 50%;
@@ -242,8 +243,8 @@ canvas {
 
 #shoot-button {
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: calc(var(--size) * 1.35);
+    height: calc(var(--size) * 1.35);;
     background: transparent;
     border: 1px solid var(--gray200);
     border-radius: 50%;

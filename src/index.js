@@ -4,7 +4,12 @@ import Obstacle from "./classes/Obstacle.js";
 import Particle from "./classes/Particle.js";
 import Player from "./classes/Player.js";
 import SoundEffects from "./classes/SoundEffects.js";
-import { checkMutedOn as muted, GameState, globalDeviceType as globalDevice, invadersVelocity } from "./utils/constants.js";
+import {
+  checkMutedOn as muted,
+  GameState,
+  globalDeviceType as globalDevice,
+  invadersVelocity,
+} from "./utils/constants.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./utils/storage.js";
 
 const SoundEffect = new SoundEffects();
@@ -89,19 +94,17 @@ const initObstacle = () => {
 
   const obstacle1 = new Obstacle({ x: x - offset, y }, 100, 20, color);
   const obstacle2 = new Obstacle({ x: x + offset, y }, 100, 20, color);
-  const obstacle3 = new Obstacle({ x: innerWidth/2 - 50, y }, 100, 20, color);
+  const obstacle3 = new Obstacle({ x: innerWidth / 2 - 50, y }, 100, 20, color);
 
   obstacles = [];
 
   if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
     // obstacles.push(obstacle3);
     // console.log(obstacle3);
-    
   } else {
     obstacles.push(obstacle1);
     obstacles.push(obstacle2);
   }
-
 };
 
 initObstacle();
@@ -347,6 +350,12 @@ const gamePause = () => {
     document.body.append(pauseScreen);
 
     const buttonToggleMusic = document.getElementById("button-toggle-music");
+
+    const range = document.querySelector("ion-range");
+
+    range.addEventListener("ionChange", ({ detail }) => {
+      player.velocity = detail.value;
+    });
 
     controlsMap = {
       left: document.querySelector("#left .change-key"),

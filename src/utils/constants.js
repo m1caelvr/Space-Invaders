@@ -1,3 +1,5 @@
+import DeviceControlManager from "../classes/DeviceControlManager.js";
+
 export const PATH_SPACESHIP_IMAGE = "src/assets/images/spaceship.png";
 export const PATH_ENGINE_IMAGE = "src/assets/images/engine.png";
 export const PATH_ENGINE_SPRITES = "src/assets/images/engine_sprites.png";
@@ -12,3 +14,4 @@ export const GameState = {
 }
 
 export let checkMutedOn = true;
+export let globalDeviceType = new DeviceControlManager().detectDevice();

@@ -36,8 +36,10 @@ canvas {
     align-items: center;
     position: absolute;
     color: var(--gray200);
+    z-index: 1;
     top: 0;
     left: 0;
+    backdrop-filter: blur(50px);
 }
 
 .screen h1 {
@@ -251,11 +253,11 @@ canvas {
     margin-inline: auto 0;
 }
 
-@media screen and (min-width: 600px) {
+/* @media screen and (min-width: 600px) {
     .joystick-wrapper {
         display: none;
     }
-}
+} */
 
 @keyframes backdrop {
     from {

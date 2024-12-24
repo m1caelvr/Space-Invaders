@@ -1,9 +1,10 @@
+import DeviceControlManager from "./classes/DeviceControlManager.js";
 import Grid from "./classes/Grid.js";
 import Obstacle from "./classes/Obstacle.js";
 import Particle from "./classes/Particle.js";
 import Player from "./classes/Player.js";
 import SoundEffects from "./classes/SoundEffects.js";
-import { checkMutedOn as muted, GameState } from "./utils/constants.js";
+import { checkMutedOn as muted, GameState, globalDeviceType as globalDevice } from "./utils/constants.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./utils/storage.js";
 
 const SoundEffect = new SoundEffects();
@@ -23,6 +24,7 @@ const buttonRestart = document.querySelector(".button-restart");
 const buttonSettings = document.querySelector(".button-settings");
 const buttonReturn = document.querySelector(".button-return");
 
+const joystickWrapper = document.querySelector(".joystick-wrapper");
 const joystickContainer = document.getElementById("joystick-container");
 const joystick = document.getElementById("joystick");
 const shootButton = document.getElementById("shoot-button");
@@ -31,6 +33,7 @@ let joystickActive = false;
 let joystickStartX = 0;
 let playerDirectionX = 0;
 
+joystickWrapper.remove();
 gameOverScreen.remove();
 pauseScreen.remove();
 
@@ -57,6 +60,11 @@ const gameData = {
   high: 0,
 };
 
+const deviceControlManager = new DeviceControlManager();
+let deviceType = deviceControlManager.deviceType;
+let globalDeviceType = globalDevice;
+globalDeviceType = deviceType;
+
 const player = new Player(innerWidth, innerHeight);
 const grid = new Grid(5, 10);
 
@@ -64,6 +72,14 @@ const playerProjectiles = [];
 const invadersProjectiles = [];
 const particles = [];
 var obstacles = [];
+
+function setupControls() {
+  if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
+    document.body.append(joystickWrapper);
+  } else if (globalDeviceType === "desktop" && joystickWrapper) {
+    joystickWrapper.remove();
+  }
+}
 
 const initObstacle = () => {
   const x = innerWidth / 2 - 50;
@@ -73,11 +89,17 @@ const initObstacle = () => {
 
   const obstacle1 = new Obstacle({ x: x - offset, y }, 100, 20, color);
   const obstacle2 = new Obstacle({ x: x + offset, y }, 100, 20, color);
+  const obstacle3 = new Obstacle({ x: innerWidth/2 - 50, y }, 100, 20, color);
 
   obstacles = [];
 
-  obstacles.push(obstacle1);
-  obstacles.push(obstacle2);
+  if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
+    obstacles.push(obstacle3);
+  } else {
+    obstacles.push(obstacle1);
+    obstacles.push(obstacle2);
+  }
+
 };
 
 initObstacle();
@@ -114,7 +136,6 @@ const changeKey = (action) => {
 
   const keyListener = (event) => {
     controls[action] = event.code.toLowerCase();
-    console.log(controls[action]);
 
     updateControlsUI();
     button.classList.remove("active");
@@ -341,7 +362,6 @@ const gamePause = () => {
     if (!isMusicToggleListenerAdded) {
       buttonToggleMusic.addEventListener("click", () => {
         checkMutedOn = !checkMutedOn;
-        console.log(`Music muted: ${checkMutedOn}`);
       });
       isMusicToggleListenerAdded = true;
     }
@@ -465,6 +485,7 @@ addEventListener("keyup", (event) => {
 
 buttonPlay.addEventListener("click", () => {
   startScreen.remove();
+  setupControls();
   scoreUI.style.display = "block";
   currentState = GameState.PLAYING;
 
@@ -523,6 +544,14 @@ shootButton.addEventListener("touchstart", () => {
 
   player.shoot(playerProjectiles);
   keys.shoot.released = false;
+});
+
+window.addEventListener("resize", () => {
+  const newDeviceType = deviceControlManager.detectDevice();
+  if (newDeviceType !== globalDeviceType) {
+    globalDeviceType = newDeviceType;
+    setupControls();
+  }
 });
 
 buttonSettings.addEventListener("click", gamePause);

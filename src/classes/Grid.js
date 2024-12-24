@@ -1,3 +1,4 @@
+import { globalDeviceType } from "../utils/constants.js";
 import Invader from "./Invaders.js";
 
 export default class Grid {
@@ -48,7 +49,8 @@ export default class Grid {
 
     this.invaders.forEach((invader) => {
       if (this.moveDown) {
-        invader.moveDown();
+        let deviceType = globalDeviceType;        
+        if (deviceType === "desktop") invader.moveDown();
         invader.incrementVelocity();
         this.invadersVelocity = invader.velocity;
       };

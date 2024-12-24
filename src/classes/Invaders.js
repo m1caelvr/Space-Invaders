@@ -6,8 +6,10 @@ export default class Invader {
     this.position = position
     this.width = 50 * .8;
     this.height = 37 * .8;
-    this.velocity = velocity;
+    this.screenWidth = innerWidth;
 
+    const distance = this.screenWidth - this.width;
+    this.velocity = distance / velocity;
 
     this.image = this.getImage(PATH_INVADER_IMAGE);
   }

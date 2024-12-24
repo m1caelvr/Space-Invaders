@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" href="src/style.css" />
     <link rel="stylesheet" href="src/ionIconStyles.css" />
+    <link rel="shortcut icon" href="src/assets/images/invader.png" type="image/x-icon">
 
     <script
       type="module"
@@ -47,9 +48,12 @@
   <body>
     <section class="score-ui">
       <div>
-        <span class="score">score: <span>0</span></span>
-        <span class="level">level: <span>1</span></span>
-        <span class="high">high: <span>0</span></span>
+        <div class="game-data">
+          <span class="last-score">last score: <span>0</span></span>
+          <span class="score">score: <span>0</span></span>
+          <span class="level">level: <span>1</span></span>
+          <span class="high">high: <span>0</span></span>
+        </div>
         <button class="button-settings">
           <ion-icon class="icon-settings" name="settings"></ion-icon>
         </button>

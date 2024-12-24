@@ -12,6 +12,7 @@
     --gray300: #ccc;
     --gray900: #121212;
     --purple100: #941cff;
+    --red400: #f63838;
 
     --ion-text-color: var(--gray200);    
 }
@@ -94,11 +95,27 @@ canvas {
 }
 
 .score-ui > div {
+    max-width: 800px;
+    margin: 0 auto;
     display: flex;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
+    gap: 10px;
+}
+
+.score-ui > div .game-data {
+    flex: 1;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.score-ui > div span {
+    display: flex;
+    text-wrap: nowrap;
 }
 
 .score-ui .button-settings {

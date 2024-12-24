@@ -13,6 +13,7 @@ const gameOverScreen = document.querySelector(".game-over");
 const pauseScreen = document.querySelector(".pause-screen");
 const scoreUI = document.querySelector(".score-ui");
 
+const lastScoreElement = document.querySelector(".last-score > span");
 const scoreElement = document.querySelector(".score > span");
 const levelElement = document.querySelector(".level > span");
 const highElement = document.querySelector(".high > span");
@@ -28,8 +29,13 @@ pauseScreen.remove();
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+const defineSizeCanvas = () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+
+defineSizeCanvas();
+window.addEventListener("resize", defineSizeCanvas);
 
 ctx.imageSmoothingEnabled = false;
 
@@ -37,27 +43,30 @@ let currentState = GameState.START;
 let checkMutedOn = muted;
 
 const gameData = {
+  lastScore: 0,
   score: 0,
   level: 1,
   high: 0,
 };
 
-const player = new Player(canvas.width, canvas.height);
+const player = new Player(innerWidth, innerHeight);
 const grid = new Grid(5, 10);
 
 const playerProjectiles = [];
 const invadersProjectiles = [];
 const particles = [];
-const obstacles = [];
+var obstacles = [];
 
 const initObstacle = () => {
-  const x = canvas.width / 2 - 50;
-  const y = canvas.height - 250;
-  const offset = canvas.width * 0.15;
+  const x = innerWidth / 2 - 50;
+  const y = innerHeight - 250;
+  const offset = innerWidth * 0.15;
   const color = "#fff";
 
   const obstacle1 = new Obstacle({ x: x - offset, y }, 100, 20, color);
   const obstacle2 = new Obstacle({ x: x + offset, y }, 100, 20, color);
+  
+  obstacles = [];
 
   obstacles.push(obstacle1);
   obstacles.push(obstacle2);
@@ -116,8 +125,6 @@ const loadControls = () => {
 
 loadControls();
 
-
-
 const saveGameData = () => {
   saveToLocalStorage("gameData", gameData);
 };
@@ -128,6 +135,7 @@ const loadGameData = () => {
 };
 
 const showGameData = () => {
+  lastScoreElement.textContent = gameData.lastScore;
   scoreElement.textContent = gameData.score;
   levelElement.textContent = gameData.level;
   highElement.textContent = gameData.high;
@@ -227,6 +235,9 @@ const checkShootPlayer = () => {
     if (player.hit(projectile)) {
       if (checkMutedOn) SoundEffect.playExplosionSound();
       invadersProjectiles.splice(i, 1);
+      gameData.lastScore = gameData.score;
+
+      saveGameData();
       gameOver();
     }
   });
@@ -339,6 +350,8 @@ const gameLoop = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (currentState === GameState.PLAYING) {
+    initObstacle();
+
     showGameData();
     spawnGrid();
 
@@ -394,10 +407,9 @@ const gameLoop = () => {
   }
 
   if (currentState === GameState.GAME_OVER) {
-    checkShootObstacle();
+    initObstacle();
 
     drawParticles();
-    // drawProjectiles();
     drawObstacles();
 
     clearProjectiles();

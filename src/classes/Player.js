@@ -87,7 +87,8 @@ export default class Player {
         x: this.position.x + this.width / 2 - 1,
         y: this.position.y + 2,
       },
-      -10
+      -10,
+      "#f63838"
     );
 
     projectiles.push(p);

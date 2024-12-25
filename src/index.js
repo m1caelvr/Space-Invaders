@@ -99,8 +99,7 @@ const initObstacle = () => {
   obstacles = [];
 
   if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
-    obstacles.push(obstacle3);
-    // console.log(obstacle3);
+    // obstacles.push(obstacle3);
   } else {
     obstacles.push(obstacle1);
     obstacles.push(obstacle2);

@@ -12,6 +12,7 @@ import {
   GameDificulty,
   GameState,
   getObstacleOn,
+  getScore,
 } from "./utils/constants.js";
 import { setupPauseScreenActions } from "./utils/gameConfigure.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./utils/storage.js";
@@ -48,9 +49,9 @@ let invaderReached = false;
 
 let currentState = GameState.START;
 
+let currentScore = 0;
 const gameData = {
   lastScore: 0,
-  score: 0,
   level: 1,
   high: 0,
 };
@@ -142,16 +143,17 @@ const loadGameData = () => {
 
 const showGameData = () => {
   lastScoreElement.textContent = gameData.lastScore;
-  scoreElement.textContent = gameData.score;
+  scoreElement.textContent = currentScore;
   levelElement.textContent = gameData.level;
   highElement.textContent = gameData.high;
 };
 
 const incrementScore = (value) => {
-  gameData.score += value;
+  currentScore += value;
 
-  if (gameData.score > gameData.high) {
-    gameData.high = gameData.score;
+  if (currentScore > gameData.high) {
+    gameData.high = currentScore;
+    highElement.style.color = "#941cff";
     saveGameData();
   }
 };
@@ -171,7 +173,12 @@ const drawProjectiles = () => {
 
   projectiles.forEach((projectile) => {
     projectile.draw(ctx);
-    projectile.update();
+
+    if (invadersProjectiles.includes(projectile)) {
+      projectile.update(player);
+    } else {
+      projectile.update();
+    }
   });
 };
 
@@ -231,8 +238,9 @@ const checkShootInvader = () => {
           "#941cff"
         );
 
-        incrementScore(10);
-
+        incrementScore(getScore());
+        console.log("Score: ", getScore());
+        
         grid.invaders.splice(invaderIndex, 1);
         playerProjectiles.splice(playerProjectiles.indexOf(projectile), 1);
       }
@@ -245,7 +253,7 @@ const checkShootPlayer = () => {
     if (player.hit(projectile)) {
       SoundEffect.playExplosionSound();
       invadersProjectiles.splice(i, 1);
-      gameData.lastScore = gameData.score;
+      gameData.lastScore = currentScore;
 
       saveGameData();
       gameOver();
@@ -280,7 +288,7 @@ const checkInvadersObstacle = () => {
 };
 
 const spawnGrid = () => {
-  if (grid.invaders.length === 0) {
+  if (grid.invaders.length === 0 && playerProjectiles.length === 0) {
     SoundEffect.playNextLevelSound();
 
     grid.rows = Math.round(Math.random() * 7 + 1);
@@ -323,7 +331,10 @@ const gameOver = () => {
   currentState = GameState.GAME_OVER;
   player.alive = false;
 
-  document.body.append(gameOverScreen);
+  setTimeout(() => {
+    document.body.append(gameOverScreen);
+  }, 800);
+
 };
 
 const gamePause = () => {
@@ -374,7 +385,7 @@ const restartGame = () => {
 
   invadersProjectiles.length = 0;
 
-  gameData.score = 0;
+  currentScore = 0;
   gameData.level = 0;
 
   gameOverScreen.remove();

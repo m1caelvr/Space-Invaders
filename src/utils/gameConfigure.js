@@ -119,7 +119,7 @@ const adjustJoystickSize = () => {
 
       const clampedPercent = Math.max(0, Math.min(100, percent));
     
-      const newSize = 70 + ((clampedPercent / 100) * 60);
+      const newSize = (clampedPercent / 50) * 70;
     
       document.documentElement.style.setProperty("--size", `${newSize}px`);
     

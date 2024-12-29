@@ -89,7 +89,7 @@ export default class Player {
         x: this.position.x + this.width / 2 - 1,
         y: this.position.y + 2,
       },
-      -10,
+      -15,
       "#f63838"
     );
 

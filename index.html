@@ -99,6 +99,7 @@
             </label>
             <div class="regulator">
               <ion-range
+                class="sensitivity-range"
                 aria-label="Custom range"
                 min="1"
                 max="10"
@@ -109,9 +110,42 @@
               ></ion-range>
             </div>
           </div>
+
+          <div class="gameplay-mode">
+            <h2>Modo de jogo</h2>
+
+            <div class="dificulty control">
+              <label>
+                <ion-icon name="game-controller"></ion-icon>
+                <h3>Dificuldade</h3>
+              </label>
+              <div class="regulator">
+                <ion-range
+                  class="dificulty-range"
+                  aria-label="Custom range"
+                  min="1"
+                  max="3"
+                  value="1"
+                  pin="true"
+                  ticks="true"
+                  snaps="true"
+                ></ion-range>
+              </div>
+            </div>
+
+            <div class="obstacle control">
+              <label>
+                <ion-icon name="game-controller"></ion-icon>
+                <h3>Parede</h3>
+              </label>
+              <div class="regulator">
+                <ion-toggle id="button-toggle-obstacle" checked="true"></ion-toggle>
+              </div>
+            </div>
+          </div>
   
-          <h2>Controles</h2>
-          <div id="controls">
+          <div id="controls" class="desktop">
+            <h2>Controles</h2>
             <div id="left" class="control">
               <label>
                 <ion-icon name="arrow-back"></ion-icon>
@@ -142,6 +176,26 @@
                 <h3>Pause</h3>
               </label>
               <button class="change-key">Enter</button>
+            </div>
+          </div>
+
+          <div class="mobile">
+            <h2>Controles</h2>
+            <div class="joystick-size control">
+              <label>
+                <ion-icon name="game-controller"></ion-icon>
+                <h3>Tamanho do joystick</h3>
+              </label>
+              <div class="regulator ">
+                <ion-range
+                  class="joystick-range"
+                  aria-label="Custom range"
+                  min="1"
+                  max="100"
+                  value="50"
+                  pin="true"
+                ></ion-range>
+              </div>
             </div>
           </div>
           

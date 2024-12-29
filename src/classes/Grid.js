@@ -1,4 +1,4 @@
-import { globalDeviceType, invadersVelocity } from "../utils/constants.js";
+import { getInvadersVelocity, globalDeviceType, invadersVelocity } from "../utils/constants.js";
 import Invader from "./Invaders.js";
 
 export default class Grid {
@@ -46,6 +46,7 @@ export default class Grid {
     }
 
     if (!playerStatus) this.moveDown = false;
+    let newVelocity = getInvadersVelocity();
 
     this.invaders.forEach((invader) => {
       if (this.moveDown) {
@@ -55,8 +56,8 @@ export default class Grid {
         this.invadersVelocity = invader.velocity;
       };
 
-      if (this.direction === "right") invader.moveRight();
-      if (this.direction === "left") invader.moveLeft();
+      if (this.direction === "right") invader.moveRight(newVelocity);
+      if (this.direction === "left") invader.moveLeft(newVelocity);
     });
 
     this.moveDown = false;

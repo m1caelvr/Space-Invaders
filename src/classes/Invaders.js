@@ -1,4 +1,4 @@
-import { globalDeviceType, PATH_INVADER_IMAGE } from "../utils/constants.js";
+import { getProjectileVelocity, globalDeviceType, PATH_INVADER_IMAGE } from "../utils/constants.js";
 import Projectile from "./Projectile.js";
 
 export default class Invader {
@@ -17,12 +17,12 @@ export default class Invader {
     return image;
   }
 
-  moveLeft() {
-    this.position.x -= this.velocity;
+  moveLeft(speed=null) {
+    this.position.x -= speed ? speed : this.velocity;
   }
-
-  moveRight() {
-    this.position.x += this.velocity;
+  
+  moveRight(speed=null) {
+    this.position.x += speed ? speed : this.velocity;
   }
 
   moveDown() {
@@ -45,12 +45,14 @@ export default class Invader {
   }
 
   shoot(projectiles) {
+    let projectileVelocity = getProjectileVelocity();
+
     const p = new Projectile(
       {
         x: this.position.x + this.width / 2 - 1,
         y: this.position.y + this.height,
       },
-      10
+      projectileVelocity,
     );
 
     projectiles.push(p);

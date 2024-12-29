@@ -11,16 +11,42 @@
 :root {
     --gray200: #d9d9d9;
     --gray300: #ccc;
+    --gray700: #555555;
     --gray900: #121212;
     --purple100: #941cff;
     --red400: #f63838;
 
+    --sb-track-color: transparent;
+    --sb-thumb-color: var(--gray700);
     --ion-text-color: var(--gray200);
+    
+    --sb-size: 2px;
+    --size: 70px;
 }
 
 body {
     overflow: hidden;
     background-color: var(--gray900);
+}
+
+*::-webkit-scrollbar {
+    width: var(--sb-size);
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 2px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    * {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
 }
 
 canvas {
@@ -139,16 +165,28 @@ canvas {
     transform: rotate(90deg) scale(1.15);
 }
 
+.gameplay-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gameplay-mode ion-range.dificulty-range::part(tick) {
+    background: var(--purple100);
+}
+
 .pause-screen {
     animation: backdrop 1s ease forwards;
 }
 .pause-screen .wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     width: 100%;
     max-width: 700px;
+    max-height: 95vh;
+    overflow: hidden auto;
 
     transform: scale(0);
     animation: zoom 1s ease forwards;
@@ -206,7 +244,6 @@ canvas {
 }
 
 .joystick-wrapper {
-    --size: 70px;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -244,7 +281,7 @@ canvas {
 #shoot-button {
     position: relative;
     width: calc(var(--size) * 1.35);
-    height: calc(var(--size) * 1.35);;
+    height: calc(var(--size) * 1.35);
     background: transparent;
     border: 1px solid var(--gray200);
     border-radius: 50%;
@@ -254,11 +291,16 @@ canvas {
     margin-inline: auto 0;
 }
 
-/* @media screen and (min-width: 600px) {
-    .joystick-wrapper {
+@media screen and (max-width: 600px) {
+    .desktop {
         display: none;
     }
-} */
+}
+@media screen and (min-width: 600px) {
+    .mobile {
+        display: none;
+    }
+}
 
 @keyframes backdrop {
     from {

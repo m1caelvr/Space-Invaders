@@ -1,23 +1,25 @@
+import { getMutedOn } from "../utils/constants.js";
+
 export default class SoundEffects {
   constructor() {
     this.shootSounds = [
-      new Audio("src/assets/audios/shoot.mp3"),
-      new Audio("src/assets/audios/shoot.mp3"),
-      new Audio("src/assets/audios/shoot.mp3"),
-      new Audio("src/assets/audios/shoot.mp3"),
-      new Audio("src/assets/audios/shoot.mp3"),
+      new Audio("/src/assets/audios/shoot.mp3"),
+      new Audio("/src/assets/audios/shoot.mp3"),
+      new Audio("/src/assets/audios/shoot.mp3"),
+      new Audio("/src/assets/audios/shoot.mp3"),
+      new Audio("/src/assets/audios/shoot.mp3"),
     ];
 
     this.hitSounds = [
-      new Audio("src/assets/audios/hit.mp3"),
-      new Audio("src/assets/audios/hit.mp3"),
-      new Audio("src/assets/audios/hit.mp3"),
-      new Audio("src/assets/audios/hit.mp3"),
-      new Audio("src/assets/audios/hit.mp3"),
+      new Audio("/src/assets/audios/hit.mp3"),
+      new Audio("/src/assets/audios/hit.mp3"),
+      new Audio("/src/assets/audios/hit.mp3"),
+      new Audio("/src/assets/audios/hit.mp3"),
+      new Audio("/src/assets/audios/hit.mp3"),
     ];
 
-    this.explosionSound = new Audio("src/assets/audios/explosion.mp3");
-    this.nextLevelSound = new Audio("src/assets/audios/next_level.mp3");
+    this.explosionSound = new Audio("/src/assets/audios/explosion.mp3");
+    this.nextLevelSound = new Audio("/src/assets/audios/next_level.mp3");
 
     this.currentShootSound = 0;
     this.currentHitSound = 0;
@@ -27,6 +29,11 @@ export default class SoundEffects {
   }
 
   playShootSound() {
+    const checkMutedOn = getMutedOn();
+
+    console.log("sound: " + checkMutedOn);
+
+    if (!checkMutedOn) return;
     this.shootSounds[this.currentShootSound].currentTime = 0;
     this.shootSounds[this.currentShootSound].play();
 
@@ -35,6 +42,9 @@ export default class SoundEffects {
   }
 
   playHitSound() {
+    const checkMutedOn = getMutedOn();
+
+    if (!checkMutedOn) return;
     this.hitSounds[this.currentHitSound].currentTime = 0;
     this.hitSounds[this.currentHitSound].play();
 
@@ -42,10 +52,16 @@ export default class SoundEffects {
   }
 
   playExplosionSound() {
+    const checkMutedOn = getMutedOn();
+
+    if (!checkMutedOn) return;
     this.explosionSound.play();
   }
 
   playNextLevelSound() {
+    const checkMutedOn = getMutedOn();
+
+    if (!checkMutedOn) return;
     this.nextLevelSound.play();
   }
 

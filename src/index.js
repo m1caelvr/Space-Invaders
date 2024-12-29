@@ -5,11 +5,15 @@ import Particle from "./classes/Particle.js";
 import Player from "./classes/Player.js";
 import SoundEffects from "./classes/SoundEffects.js";
 import {
-  checkMutedOn as muted,
-  GameState,
   globalDeviceType as globalDevice,
+  obstacles as obstaclesArray,
+  controls as controlsArray,
   invadersVelocity,
+  GameDificulty,
+  GameState,
+  getObstacleOn,
 } from "./utils/constants.js";
+import { setupPauseScreenActions } from "./utils/gameConfigure.js";
 import { loadFromLocalStorage, saveToLocalStorage } from "./utils/storage.js";
 
 const SoundEffect = new SoundEffects();
@@ -38,6 +42,29 @@ let joystickActive = false;
 let joystickStartX = 0;
 let playerDirectionX = 0;
 
+let obstacles = obstaclesArray;
+let controls = controlsArray;
+
+let currentState = GameState.START;
+let gamemeDificulty = GameDificulty.EASE;
+
+const gameData = {
+  lastScore: 0,
+  score: 0,
+  level: 1,
+  high: 0,
+};
+
+const keys = {
+  left: false,
+  right: false,
+  pause: false,
+  shoot: {
+    pressed: false,
+    released: true,
+  },
+};
+
 joystickWrapper.remove();
 gameOverScreen.remove();
 pauseScreen.remove();
@@ -55,16 +82,6 @@ window.addEventListener("resize", defineSizeCanvas);
 
 ctx.imageSmoothingEnabled = false;
 
-let currentState = GameState.START;
-let checkMutedOn = muted;
-
-const gameData = {
-  lastScore: 0,
-  score: 0,
-  level: 1,
-  high: 0,
-};
-
 const deviceControlManager = new DeviceControlManager();
 let deviceType = deviceControlManager.deviceType;
 let globalDeviceType = globalDevice;
@@ -76,7 +93,6 @@ const grid = new Grid(4, 7);
 const playerProjectiles = [];
 const invadersProjectiles = [];
 const particles = [];
-var obstacles = [];
 
 function setupControls() {
   if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
@@ -99,7 +115,7 @@ const initObstacle = () => {
   obstacles = [];
 
   if (globalDeviceType === "mobile" || globalDeviceType === "tablet") {
-    // obstacles.push(obstacle3);
+    obstacles.push(obstacle3);
   } else {
     obstacles.push(obstacle1);
     obstacles.push(obstacle2);
@@ -107,48 +123,6 @@ const initObstacle = () => {
 };
 
 initObstacle();
-
-const keys = {
-  left: false,
-  right: false,
-  pause: false,
-  shoot: {
-    pressed: false,
-    released: true,
-  },
-};
-
-let controls = {
-  left: "keya",
-  right: "keyd",
-  shoot: "space",
-  pause: "enter",
-};
-
-let controlsMap = {};
-
-const updateControlsUI = () => {
-  Object.keys(controls).forEach((action) => {
-    controlsMap[action].textContent = controls[action];
-  });
-};
-
-const changeKey = (action) => {
-  const button = controlsMap[action];
-  button.classList.add("active");
-  button.textContent = "Press any key...";
-
-  const keyListener = (event) => {
-    controls[action] = event.code.toLowerCase();
-
-    updateControlsUI();
-    button.classList.remove("active");
-    saveToLocalStorage("gameControls", controls);
-    document.removeEventListener("keydown", keyListener);
-  };
-
-  document.addEventListener("keydown", keyListener);
-};
 
 const loadControls = () => {
   const savedControls = loadFromLocalStorage("gameControls");
@@ -183,7 +157,12 @@ const incrementScore = (value) => {
 };
 
 const drawObstacles = () => {
-  obstacles.forEach((obstacle) => obstacle.draw(ctx));
+  let obstaclesShow = getObstacleOn();
+  // console.log("getObstacleOn: ", obstaclesShow);
+  
+  if (obstaclesShow) {
+    obstacles.forEach((obstacle) => obstacle.draw(ctx));
+  }
 };
 
 const drawProjectiles = () => {
@@ -241,8 +220,7 @@ const checkShootInvader = () => {
   grid.invaders.forEach((invader, invaderIndex) => {
     playerProjectiles.some((projectile) => {
       if (invader.hit(projectile)) {
-        if (checkMutedOn) SoundEffect.playHitSound();
-
+        SoundEffect.playHitSound();
         createExplosion(
           {
             x: invader.position.x + invader.width / 2,
@@ -264,7 +242,7 @@ const checkShootInvader = () => {
 const checkShootPlayer = () => {
   invadersProjectiles.some((projectile, i) => {
     if (player.hit(projectile)) {
-      if (checkMutedOn) SoundEffect.playExplosionSound();
+      SoundEffect.playExplosionSound();
       invadersProjectiles.splice(i, 1);
       gameData.lastScore = gameData.score;
 
@@ -292,7 +270,7 @@ const checkShootObstacle = () => {
 
 const spawnGrid = () => {
   if (grid.invaders.length === 0) {
-    if (checkMutedOn) SoundEffect.playNextLevelSound();
+    SoundEffect.playNextLevelSound();
 
     grid.rows = Math.round(Math.random() * 7 + 1);
     grid.cols = Math.round(Math.random() * 7 + 1);
@@ -337,8 +315,6 @@ const gameOver = () => {
   document.body.append(gameOverScreen);
 };
 
-let isMusicToggleListenerAdded = false;
-
 const gamePause = () => {
   if (currentState === GameState.PAUSED) {
     pauseScreen.remove();
@@ -348,33 +324,7 @@ const gamePause = () => {
     currentState = GameState.PAUSED;
     document.body.append(pauseScreen);
 
-    const buttonToggleMusic = document.getElementById("button-toggle-music");
-
-    const range = document.querySelector("ion-range");
-
-    range.addEventListener("ionChange", ({ detail }) => {
-      player.velocity = detail.value;
-    });
-
-    controlsMap = {
-      left: document.querySelector("#left .change-key"),
-      right: document.querySelector("#right .change-key"),
-      shoot: document.querySelector("#shoot .change-key"),
-      pause: document.querySelector("#pause .change-key"),
-    };
-
-    updateControlsUI();
-
-    Object.keys(controls).forEach((action) => {
-      controlsMap[action].addEventListener("click", () => changeKey(action));
-    });
-
-    if (!isMusicToggleListenerAdded) {
-      buttonToggleMusic.addEventListener("click", () => {
-        checkMutedOn = !checkMutedOn;
-      });
-      isMusicToggleListenerAdded = true;
-    }
+    setupPauseScreenActions(player);
   }
 };
 
@@ -385,7 +335,7 @@ const gameLoop = () => {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (currentState === GameState.PLAYING) {
+  if (currentState === GameState.PLAYING) {    
     initObstacle();
 
     showGameData();
@@ -413,7 +363,7 @@ const gameLoop = () => {
     );
 
     if (keys.shoot.pressed && keys.shoot.released) {
-      if (checkMutedOn) SoundEffect.playShootSound();
+      SoundEffect.playShootSound();
 
       player.shoot(playerProjectiles);
       keys.shoot.released = false;
@@ -511,7 +461,8 @@ buttonRestart.addEventListener("click", () => {
   player.alive = true;
 
   grid.invaders.length = 0;
-  grid.invadersVelocity = invadersVelocity;
+  let localInvadersVelocity = invadersVelocity;
+  grid.invadersVelocity = localInvadersVelocity;
 
   invadersProjectiles.length = 0;
 
@@ -550,7 +501,7 @@ joystickContainer.addEventListener("touchend", () => {
 });
 
 shootButton.addEventListener("touchstart", () => {
-  if (checkMutedOn) SoundEffect.playShootSound();
+  SoundEffect.playShootSound();
 
   player.shoot(playerProjectiles);
   keys.shoot.released = false;

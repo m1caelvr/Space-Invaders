@@ -7,6 +7,7 @@ import {
   GameDificulty,
   setObstacleOn,
   getObstacleOn,
+  playerVelocity,
 } from "./constants.js";
 
 let controlsMap = controlsMapArray;
@@ -15,6 +16,7 @@ let isMusicToggleListenerAdded = false;
 
 export const setupPauseScreenActions = (player) => {
   setupSensitivityControl(player);
+  setupJoystickOpacityControl();
   setupDificultyControl();
   adjustJoystickSize();
   setupControlsMap();
@@ -27,14 +29,16 @@ export const setupPauseScreenActions = (player) => {
   isMusicToggleListenerAdded = true;
 };
 
-export const setupSensitivityControl = (player) => {
+const setupSensitivityControl = (player) => {
   const sensitivityRange = document.querySelector(".sensitivity-range");
+
   sensitivityRange.addEventListener("ionChange", ({ detail }) => {
-    player.velocity = detail.value;
+    const initialVelocity = playerVelocity;
+    player.velocity = (detail.value / 50) * initialVelocity;
   });
 };
 
-export const setupDificultyControl = () => {
+const setupDificultyControl = () => {
   const dificultyRange = document.querySelector(".dificulty-range");
 
   dificultyRange.addEventListener("ionChange", ({ detail }) => {
@@ -54,13 +58,12 @@ export const setupDificultyControl = () => {
   });
 };
 
-export const setupObstacleToggle = () => {
+const setupObstacleToggle = () => {
   const buttonToggleObstacle = document.getElementById(
     "button-toggle-obstacle"
   );
   buttonToggleObstacle.addEventListener("click", () => {
     setObstacleOn(!getObstacleOn());
-    console.log("getObstacleOn 2: ", getObstacleOn());
   });
 };
 
@@ -87,7 +90,7 @@ const changeKey = (action) => {
   document.addEventListener("keydown", keyListener);
 };
 
-export const setupControlsMap = () => {
+const setupControlsMap = () => {
   controlsMap = {
     left: document.querySelector("#left .change-key"),
     right: document.querySelector("#right .change-key"),
@@ -102,7 +105,7 @@ export const setupControlsMap = () => {
   });
 };
 
-export const setupMusicToggle = () => {
+const setupMusicToggle = () => {
   const buttonToggleMusic = document.getElementById("button-toggle-music");
 
   buttonToggleMusic.addEventListener("click", () => {
@@ -111,22 +114,40 @@ export const setupMusicToggle = () => {
 };
 
 const adjustJoystickSize = () => {
-    const joystickRange = document.querySelector(".joystick-range");
-    let percent = joystickRange.value;
-  
-    joystickRange.addEventListener("ionChange", ({ detail }) => {
-      percent = detail.value;
+  const joystickRange = document.querySelector(".joystick-range");
+  let percent = joystickRange.value;
 
-      const clampedPercent = Math.max(0, Math.min(100, percent));
-    
-      const newSize = (clampedPercent / 50) * 70;
-    
-      document.documentElement.style.setProperty("--size", `${newSize}px`);
-    
-      const shootButton = document.getElementById('shoot-button');
-      shootButton.style.width = `calc(${newSize}px * 1.35)`;
-      shootButton.style.height = `calc(${newSize}px * 1.35)`;
-    });
-  
+  joystickRange.addEventListener("ionChange", ({ detail }) => {
+    percent = detail.value;
+
+    const clampedPercent = Math.max(0, Math.min(100, percent));
+
+    const newSize = (clampedPercent / 50) * 70;
+
+    document.documentElement.style.setProperty("--size", `${newSize}px`);
+
+    const shootButton = document.getElementById("shoot-button");
+    shootButton.style.width = `calc(${newSize}px * 1.35)`;
+    shootButton.style.height = `calc(${newSize}px * 1.35)`;
+  });
+};
+
+const setupJoystickOpacityControl = () => {
+  const joystickOpacityRange = document.querySelector(
+    ".joystick-opacity-range"
+  );
+
+  const setJoystickOpacity = (opacityValue) => {
+    document.documentElement.style.setProperty(
+      "--joystick-opacity",
+      opacityValue
+    );
   };
-  
+
+  joystickOpacityRange.addEventListener("ionChange", (event) => {
+    const opacityValue = event.detail.value;
+    setJoystickOpacity(opacityValue / 100);
+  });
+
+  setJoystickOpacity(1);
+};

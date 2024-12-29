@@ -31,8 +31,6 @@ export default class SoundEffects {
   playShootSound() {
     const checkMutedOn = getMutedOn();
 
-    console.log("sound: " + checkMutedOn);
-
     if (!checkMutedOn) return;
     this.shootSounds[this.currentShootSound].currentTime = 0;
     this.shootSounds[this.currentShootSound].play();

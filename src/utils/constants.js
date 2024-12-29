@@ -17,7 +17,7 @@ export let controls = {
   left: "keya",
   right: "keyd",
   shoot: "space",
-  pause: "enter",
+  pause: "keyp",
 };
 
 export const GameDificulty = {
@@ -27,6 +27,7 @@ export const GameDificulty = {
 };
 
 export let projectileVelocity = 10;
+export const playerVelocity = 10;
 
 export function getProjectileVelocity() {
   return projectileVelocity;

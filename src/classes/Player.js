@@ -1,8 +1,10 @@
 import {
+  globalDeviceType,
   INITIAL_FRAMES,
   PATH_ENGINE_IMAGE,
   PATH_ENGINE_SPRITES,
   PATH_SPACESHIP_IMAGE,
+  playerVelocity,
 } from "../utils/constants.js";
 import Projectile from "./Projectile.js";
 
@@ -10,12 +12,12 @@ export default class Player {
   constructor(canvasWidth, canvasHeight) {
     this.width = 48 * 2;
     this.height = 48 * 2;
-    this.velocity = 8;
+    this.velocity = playerVelocity;
     this.alive = true;
 
     this.position = {
       x: canvasWidth / 2 - this.width / 2,
-      y: canvasHeight - this.height - 30,
+      y: globalDeviceType === "desktop" ? canvasHeight - this.height - 30 : canvasHeight - this.height - 100,
     };
 
     this.image = this.getImage(PATH_SPACESHIP_IMAGE);

@@ -101,9 +101,9 @@
               <ion-range
                 class="sensitivity-range"
                 aria-label="Custom range"
-                min="1"
-                max="10"
-                value="8"
+                min="10"
+                max="100"
+                value="50"
                 pin="true"
                 ticks="true"
                 snaps="true"
@@ -190,9 +190,26 @@
                 <ion-range
                   class="joystick-range"
                   aria-label="Custom range"
-                  min="1"
+                  min="10"
                   max="100"
                   value="50"
+                  pin="true"
+                ></ion-range>
+              </div>
+            </div>
+
+            <div class="joystick-opacity control">
+              <label>
+                <ion-icon name="game-controller"></ion-icon>
+                <h3>Opacidade do joystick</h3>
+              </label>
+              <div class="regulator">
+                <ion-range
+                  class="joystick-opacity-range"
+                  aria-label="Custom range"
+                  min="0"
+                  max="100"
+                  value="100"
                   pin="true"
                 ></ion-range>
               </div>
@@ -209,7 +226,7 @@
       <div id="joystick-container">
         <div id="joystick"></div>
       </div>
-      <button id="shoot-button">Shoot</button>
+      <button id="shoot-button"><img src="./src/assets/svgs/target.svg" alt="shoot"></button>
     </section>
 
     <canvas></canvas>

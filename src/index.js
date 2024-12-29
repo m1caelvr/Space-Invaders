@@ -46,7 +46,6 @@ let obstacles = obstaclesArray;
 let controls = controlsArray;
 
 let currentState = GameState.START;
-let gamemeDificulty = GameDificulty.EASE;
 
 const gameData = {
   lastScore: 0,
@@ -104,7 +103,7 @@ function setupControls() {
 
 const initObstacle = () => {
   const x = innerWidth / 2 - 50;
-  const y = innerHeight - 250;
+  const y = innerHeight - 300;
   const offset = innerWidth * 0.15;
   const color = "#fff";
 
@@ -158,10 +157,11 @@ const incrementScore = (value) => {
 
 const drawObstacles = () => {
   let obstaclesShow = getObstacleOn();
-  // console.log("getObstacleOn: ", obstaclesShow);
-  
+
   if (obstaclesShow) {
     obstacles.forEach((obstacle) => obstacle.draw(ctx));
+  } else {
+    obstacles = [];
   }
 };
 
@@ -323,7 +323,6 @@ const gamePause = () => {
   } else if (currentState === GameState.PLAYING) {
     currentState = GameState.PAUSED;
     document.body.append(pauseScreen);
-
     setupPauseScreenActions(player);
   }
 };
@@ -335,7 +334,7 @@ const gameLoop = () => {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (currentState === GameState.PLAYING) {    
+  if (currentState === GameState.PLAYING) {
     initObstacle();
 
     showGameData();
@@ -385,10 +384,6 @@ const gameLoop = () => {
       ctx.rotate(0.15);
     }
 
-    if (keys.pause) {
-      gamePause();
-    }
-
     ctx.translate(
       -player.position.x - player.width / 2,
       -player.position.y - player.height / 2
@@ -435,7 +430,10 @@ addEventListener("keyup", (event) => {
 
   if (key === controls.right) keys.right = false;
 
-  if (key === controls.pause) keys.pause = false;
+  if (key === controls.pause) {
+    keys.pause = false;
+    gamePause();
+  }
 
   if (key === controls.shoot) {
     keys.shoot.pressed = false;

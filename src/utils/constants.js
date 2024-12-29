@@ -34,7 +34,7 @@ export function getProjectileVelocity() {
 }
 
 let currentDificulty = GameDificulty.EASY;
-export let invadersVelocity = 3;
+export let invadersVelocity = 5;
 
 export function getDificulty() {
   return currentDificulty;
@@ -49,16 +49,16 @@ export function setDificulty(newDificulty) {
 
   switch (newDificulty) {
     case GameDificulty.EASY:
-      invadersVelocity = 3;
-      projectileVelocity = 10;
+      invadersVelocity = 5;
+      projectileVelocity = 12;
       break;
     case GameDificulty.MEDIUM:
-      invadersVelocity = 5;
-      projectileVelocity = 15;
+      invadersVelocity = 8;
+      projectileVelocity = 17;
       break;
     case GameDificulty.HARD:
       invadersVelocity = 11;
-      projectileVelocity = 20;
+      projectileVelocity = 22;
       break;
     default:
       console.warn("Dificuldade desconhecida:", newDificulty);

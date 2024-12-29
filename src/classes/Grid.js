@@ -36,13 +36,13 @@ export default class Grid {
     this.invaders.forEach((invader) => invader.draw(ctx));
   }
 
-  update(playerStatus) {
+  update(playerStatus, invaderReached=false) {
     if (this.reachedRightBoundary()) {
       this.direction = "left";
-      this.moveDown = true;
+      this.moveDown = invaderReached ? false : true;
     } else if (this.reachedLeftBoundary()) {
       this.direction = "right";
-      this.moveDown = true;
+      this.moveDown = invaderReached ? false : true;
     }
 
     if (!playerStatus) this.moveDown = false;

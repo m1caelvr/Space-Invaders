@@ -19,7 +19,7 @@
     --sb-track-color: transparent;
     --sb-thumb-color: var(--gray700);
     --ion-text-color: var(--gray200);
-    
+
     --sb-size: 2px;
     --size: 70px;
     --joystick-opacity: 1;
@@ -156,7 +156,7 @@ canvas {
 }
 
 .score-ui .button-settings .icon-settings {
-    font-size: 1.5rem;
+    font-size: 2rem;
     cursor: pointer;
     color: var(--gray200);
     transition: transform 0.2s ease;
@@ -309,12 +309,26 @@ canvas {
     transform: scale(0.9);
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
     .desktop {
         display: none;
     }
+
+    .score-ui > div {
+        align-items: start;
+    }
+
+    .score-ui > div .game-data {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .score-ui .button-settings {
+        display: flex;
+        align-items: start;
+    }
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 768px) {
     .mobile {
         display: none;
     }

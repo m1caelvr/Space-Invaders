@@ -9,6 +9,7 @@ import {
   getObstacleOn,
   playerVelocity,
 } from "./constants.js";
+import { saveToLocalStorage } from "./storage.js";
 
 let controlsMap = controlsMapArray;
 let controls = controlsArray;
